@@ -1,9 +1,8 @@
 use std::fmt;
-
-use num_traits::ToPrimitive;
+use enumset::EnumSetType;
 
 // Control signals defenitions
-#[derive(Primitive, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(EnumSetType, Primitive, Debug)]
 pub enum BaseCs {
     /// Read Data Register
     RDDR = 0,
@@ -86,6 +85,18 @@ pub enum BaseCs {
 }
 
 #[derive(Clone, Copy)]
+pub struct Bit(pub u8);
+
+#[derive(Clone, Copy)]
+pub struct Addr(pub u8);
+
+#[derive(Clone, Copy)]
+pub struct Comp(pub bool);
+
+#[derive(Clone, Copy)]
+pub struct Type(pub bool);
+
+#[derive(Clone, Copy)]
 pub enum Cs {
     Base(BaseCs),
     Bit(u8),
@@ -98,8 +109,8 @@ impl fmt::Debug for Cs {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             Cs::Base(base) => write!(f, "{base:?}"),
-            Cs::Bit(bit) => write!(f, "bit {bit:08b}"),
-            Cs::Addr(addr) => write!(f, "addr {addr:02x}"),
+            Cs::Bit(bit) => write!(f, "bit 0b{bit:08b}"),
+            Cs::Addr(addr) => write!(f, "addr 0x{addr:02X}"),
             Cs::Comp(comp) => write!(f, "comp {}", comp as u8),
             Cs::Type(mc_type) => write!(f, "TYPE {}", mc_type as u8),
         }
@@ -107,6 +118,6 @@ impl fmt::Debug for Cs {
 }
 impl BaseCs {
     pub fn update_state(&self, state: &mut u64) {
-        *state |= 1 << self.to_u64().unwrap();
+        *state |= 1 << *self as u64;
     }
 }
