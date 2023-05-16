@@ -1,9 +1,7 @@
 #[cfg(test)]
 
 mod tests {
-    use duplicate::duplicate_item;
-
-    use crate::{table::TABLE, Command};
+    use crate::{table::get_table, Command};
     use paste::paste;
     use seq_macro::seq;
 
@@ -11,7 +9,8 @@ mod tests {
         paste! {
             #[test]
             fn [<decode_ address>]() {
-                let instr = &TABLE[address];
+                let table = get_table();
+                let instr = &table[address];
                 let command: Command = (instr.decoded).parse().unwrap();
                 dbg!(Command::new(instr.encoded).cs());
                 dbg!(command.cs());
@@ -21,12 +20,13 @@ mod tests {
 
             #[test]
             fn [<encode_ address>]() {
-                let instr = &TABLE[address];
+                let table = get_table();
+                let instr = &table[address];
                 let command: Command = Command::new(instr.encoded);
                 dbg!(Command::new(instr.encoded).cs());
                 dbg!(command.cs());
                 dbg!(&instr);
-                assert_eq!(format!("{}", instr.decoded), format!("{}", command.to_string(Some(&TABLE))))
+                assert_eq!(format!("{}", instr.decoded), format!("{}", command.to_string(Some(&table))))
             }
         }
     }}
