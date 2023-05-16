@@ -2,11 +2,11 @@
   import 'virtual:uno.css';
 
   import { TextInput, TableRow, TableCell } from 'carbon-components-svelte';
-  import { Instruction, type WTable } from 'bcomp-microcode-parser';
+  import * as wasm from 'bcomp-microcode';
   import { get_hex } from './utils';
 
   export let idx: number;
-  export let table: WTable;
+  export let table: wasm.WTable;
   export let diff: Record<number, { label: string; hex: string }>;
   export let flag: unknown;
 
@@ -65,7 +65,7 @@
     try {
       let t = String(e);
       instr.label = t;
-      table.set(idx, Instruction.new(orig.address, orig.encoded, instr.label, orig.decoded));
+      table.set(idx, wasm.Instruction.new(orig.address, orig.encoded, instr.label, orig.decoded));
     } catch (e) {
       console.log(e);
       err = e as string;

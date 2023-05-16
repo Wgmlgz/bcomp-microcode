@@ -9,21 +9,27 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+		"deploy": "echo '' > build/.nojekyll && gh-pages -d build -t true",
+		"postinstall": "npm i -D ../pkg"
 	},
 	"devDependencies": {
+		"@rollup/plugin-wasm": "^6.1.3",
 		"@sveltejs/adapter-auto": "^2.0.0",
+		"@sveltejs/adapter-static": "^2.0.2",
 		"@sveltejs/kit": "^1.5.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
-		"bcomp-microcode-parser": "file:../pkg",
+		"bcomp-microcode": "file:../pkg",
 		"carbon-components-svelte": "^0.73.5",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte": "^2.26.0",
+		"gh-pages": "^5.0.0",
 		"handsontable": "^12.3.3",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
+		"rollup-wasm-pack-import": "^2.0.0",
 		"sass": "^1.62.1",
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
@@ -34,5 +40,8 @@
 		"vite-plugin-top-level-await": "^1.3.0",
 		"vite-plugin-wasm": "^3.2.2"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@wasm-tool/rollup-plugin-rust": "^2.4.0"
+	}
 }

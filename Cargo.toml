@@ -1,5 +1,5 @@
 [package]
-name = "bcomp-microcode-parser"
+name = "bcomp-microcode"
 version = "0.1.0"
 edition = "2021"
 

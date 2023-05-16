@@ -1,6 +1,6 @@
 <script lang="ts">
   import 'carbon-components-svelte/css/white.css';
-  import { WTable } from 'bcomp-microcode-parser';
+  import * as wasm from 'bcomp-microcode';
   import { onMount } from 'svelte';
   import {
     Table,
@@ -11,7 +11,7 @@
     CodeSnippet
   } from 'carbon-components-svelte';
   import { TextInput } from 'carbon-components-svelte';
-
+  import { base } from '$app/paths';
   import {
     Header,
     HeaderNav,
@@ -35,16 +35,17 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
 
-  let table: WTable | null = null;
+  let table: wasm.WTable | null = null;
   type Diff = Record<number, { label: string; hex: string }>;
 
   let diff: Diff | null = null;
   onMount(() => {
+    console.log(wasm); // for some reason this doesn't work without console.log
     const raw = $page.url.searchParams.get('diff');
 
     diff = raw ? JSON.parse(atob(raw)) : {};
 
-    table = WTable.new();
+    table = wasm.WTable.new();
     setTimeout(patch_labels);
   });
 
@@ -74,7 +75,7 @@
     <HeaderNavItem text="Reset Memory" on:click={() => window.open('/', '_self')} />
     <HeaderNavItem text="Patch Labels" on:click={patch_labels} />
     <HeaderNavItem text="Link 3" />
-    <HeaderNavItem href="/" text="Link 4" />
+    <HeaderNavItem href="{base}/" text="Link 4" />
   </HeaderNav>
 </Header>
 

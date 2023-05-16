@@ -1,5 +1,5 @@
 {
-  "name": "bcomp-microcode-parser",
+  "name": "bcomp-microcode",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Wgmlgz/bcomp-microcode-parser.git"
+    "url": "git+https://github.com/Wgmlgz/bcomp-microcode.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Wgmlgz/bcomp-microcode-parser/issues"
+    "url": "https://github.com/Wgmlgz/bcomp-microcode/issues"
   },
-  "homepage": "https://github.com/Wgmlgz/bcomp-microcode-parser#readme",
+  "homepage": "https://github.com/Wgmlgz/bcomp-microcode#readme",
   "devDependencies": {
     "nodemon": "^2.0.22"
   }
