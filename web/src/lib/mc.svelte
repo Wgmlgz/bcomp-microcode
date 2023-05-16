@@ -1,20 +1,42 @@
 <script lang="ts">
   import 'virtual:uno.css';
-  import type { WTable } from 'bcomp-microcode-parser';
+
+  import { TextInput, TableRow, TableCell } from 'carbon-components-svelte';
+  import type { Instruction, WTable } from 'bcomp-microcode-parser';
+  import { get_hex } from './utils';
 
   export let idx: number;
   export let table: WTable;
+  export let diff: Record<number, {label: string, hex: string}>;
 
-  const mc = table.get(idx);
-  let s: string = mc.decoded;
-  let label: string = mc.label;
-  let microcode: bigint = mc.encoded;
+  $: {
+    if (orig.encoded !== BigInt(parseInt(hex || '0', 16))) {
+      diff[idx] = {
+        label: instr.label,
+        hex
+      };
+      console.log(instr)
+    } else {
+      delete diff[idx];
+      diff = diff;
+    }
+  }
+
+  let hex = '';
+  const update_hex = () => (hex = get_hex(instr.encoded));
+
+  const orig = table.get(idx);
+  const instr = table.get(idx);
+  update_hex();
+
   let err: string | null = null;
 
-  const on_string = (e: { currentTarget: HTMLInputElement }) => {
+  const on_string = (e: CustomEvent<string | number | null>) => {
+    console.log('on_string');
+
     try {
-      console.log(table, e.currentTarget.value)
-      microcode = table.from_string(e.currentTarget.value);
+      instr.encoded = table.from_string(String(e.detail));
+      update_hex();
       err = null;
     } catch (e) {
       console.log(e);
@@ -22,18 +44,20 @@
     }
   };
 
-  const on_microcode = (e: { currentTarget: HTMLInputElement }) => {
+  const on_microcode = (e: CustomEvent<string | number | null>) => {
+    console.log('on_microcode');
     try {
-      s = table.to_string(BigInt(parseInt(e.currentTarget.value, 16)));
+      instr.decoded = table.to_string(BigInt(parseInt(String(e.detail || '0'), 16)));
       err = null;
     } catch (e) {
       console.log(e);
       err = e as string;
     }
   };
-  const on_label = (e: { currentTarget: HTMLInputElement }) => {
+  const on_label = (e: CustomEvent<string | number | null>) => {
     try {
-      table.set_label(idx, e.currentTarget.value);
+      instr.label = String(e.detail);
+      table.set(idx, instr);
       // err = null;
     } catch (e) {
       console.log(e);
@@ -42,25 +66,31 @@
   };
 </script>
 
-<div>
-  <div class="flex gap-10">
-    <input
-      type="text"
-      pattern="#[0-9a-fA-F]{0 - 10}"
-      value={(() => microcode.toString(16))()}
-      on:input={on_microcode}
-    />
-    <input value={label} on:input={on_label} />
-    <input value={s} on:input={on_string} />
-  </div>
-
-  {#if err === null}
-    <pre>
-		{microcode.toString(16).padStart(10, '0')}
-	</pre>
-  {:else}
-    <p class="text-red">
-      {err}
-    </p>
-  {/if}
-</div>
+<TableRow id={String(idx)}>
+  <TableCell>
+    <div class="grid items-center justify-items-center">
+      {idx.toString(16).padStart(2, '0')}
+    </div>
+  </TableCell>
+  <TableCell class="align-top! pt-1">
+    <div class="w-120px -mx-15px">
+      <TextInput light pattern="[0-9a-fA-F]" bind:value={hex} on:input={on_microcode} />
+    </div>
+  </TableCell>
+  <TableCell class="align-top! pt-1">
+    <div class="w-100px -mx-15px">
+      <TextInput light bind:value={instr.label} on:input={on_label} />
+    </div>
+  </TableCell>
+  <TableCell class="align-top! pt-1">
+    <div class="w-500px -mx-15px">
+      <TextInput
+        invalid={err !== null}
+        invalidText={err || undefined}
+        light={true}
+        bind:value={instr.decoded}
+        on:input={on_string}
+      />
+    </div>
+  </TableCell>
+</TableRow>

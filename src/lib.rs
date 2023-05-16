@@ -54,8 +54,8 @@ impl WTable {
     Command::new(s).to_string(Some(&self.table.as_slice()))
   }
   #[wasm_bindgen]
-  pub fn set_label(&mut self, idx: usize, s: String) {
-    self.table[idx].label = s;
+  pub fn set(&mut self, idx: usize, instr: Instruction) {
+    self.table[idx] = instr;
   }
   #[wasm_bindgen]
   pub fn get(&mut self, idx: usize) -> Instruction {
