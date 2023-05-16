@@ -1,1 +1,1 @@
-export const get_hex = (n: bigint | number, len = 10) => n.toString(16).padStart(len, '0');
+export const get_hex = (n: bigint | number | string, len = 10) => Number(n).toString(16).padStart(len, '0');

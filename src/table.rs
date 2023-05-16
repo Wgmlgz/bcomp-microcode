@@ -9,12 +9,10 @@ pub struct Instruction {
     pub decoded: String,
 }
 
+#[wasm_bindgen]
 impl Instruction {
-    fn new<L, D>(address: u8, encoded: u64, label: L, decoded: D) -> Self
-    where
-        L: Into<String>,
-        D: Into<String>,
-    {
+    #[wasm_bindgen]
+    pub fn new(address: u8, encoded: u64, label: &str, decoded: &str) -> Self {
         Self {
             address,
             encoded,
