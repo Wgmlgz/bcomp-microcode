@@ -37,7 +37,7 @@ sus!(GOTO_TYPE, "GOTO(.+)");
 
 // command type 2 pass
 sus!(IF_STRUCTURE, "(.+)THEN(.+)");
-sus!(GOTO, r#"GOTO.+@ +([0-9a-fA-F]{{1,2}})"#);
+sus!(GOTO, r#"GOTO.* +([0-9a-fA-F]{{1,2}})"#);
 
 sus!(ONE, "1");
 sus!(ZERO, "0");

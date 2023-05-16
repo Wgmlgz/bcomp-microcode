@@ -1,30 +1,18 @@
 <script lang="ts">
-  import 'virtual:uno.css'
-	import { greet, parse_microcode } from 'bcomp-microcode-parser';
-	// console.log(greet())
-	let s: string = '';
-	let microcode: bigint = 0n;
-	let err: string | null = null;
+  import Mc from '$lib/mc.svelte';
 
-	$: try {
-		microcode = parse_microcode(s);
-    err = null
-	} catch (e) {
-    console.log(e)
-    err = e as string
-  }
+  import { WTable } from 'bcomp-microcode-parser';
+  import { onMount } from 'svelte';
+
+  let table: WTable | null = null;
+  onMount(() => {
+    table = WTable.new();
+  });
 </script>
 
-<input bind:value={s} />
-
-
-
-{#if err === null}
-	<pre>
-		{microcode.toString(16).padStart(10, '0')}
-	</pre>
-{:else}
-	<p class="text-red">
-		{err}
-	</p>
+{#if table}
+  {#each new Array(0xff) as item, idx}
+    <!-- content here -->
+    <Mc {idx} bind:table />
+  {/each}
 {/if}

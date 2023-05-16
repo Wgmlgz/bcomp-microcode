@@ -1,4 +1,5 @@
 use crate::regexes::*;
+use crate::table::Instruction;
 use crate::{
     control_signals::{
         Addr,
@@ -13,11 +14,9 @@ use fancy_regex::Match;
 use itertools::Itertools;
 use num_traits::{FromPrimitive, Zero};
 use parse_int::parse;
-use std::iter::{once, once_with};
 use std::{error::Error, ops::Range, str::FromStr};
 pub type ParseErr = Box<dyn Error>;
 pub type ParseRes = Result<(), ParseErr>;
-use bit_iter::*;
 
 #[derive(Default, Clone, Copy)]
 pub struct Command {
@@ -544,20 +543,20 @@ impl ToString for Omc {
 }
 
 impl Cmc {
-    fn goto_to_string(&self, table: Option<&Table>) -> String {
+    fn goto_to_string(&self, table:  Option<&[Instruction]>) -> String {
         let addr = self.addr.0;
         let label = table
             .and_then(|table| {
                 table
                     .get(addr as usize)
-                    .map(|item| item.label)
+                    .map(|item| item.label.clone())
                     .and_then(|label| (label.len() != 0).then(|| format!("{label} @ ")))
             })
             .unwrap_or("".into());
         format!("GOTO {label}{addr:02X}")
     }
 
-    fn to_string(&self, table: Option<&Table>) -> String {
+    fn to_string(&self, table:  Option<&[Instruction]>) -> String {
         // const UNCOND_JUMP: EnumSet<BaseCs> = ;
         if self.bit.0 == 0b10000
             && self.comp.0 == false
@@ -609,7 +608,7 @@ impl ToString for Cmc {
     }
 }
 impl Command {
-    pub fn to_string(&self, table: Option<&Table>) -> String {
+    pub fn to_string(&self, table: Option<&[Instruction]>) -> String {
         let mc: Mc = Into::<Mc>::into(*self);
         return match mc {
             Mc::Operational(omc) => omc.to_string(),
