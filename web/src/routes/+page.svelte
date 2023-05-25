@@ -115,7 +115,13 @@
             <CodeSnippet
               type="multi"
               code={Object.entries(diff)
-                .map(([idx, { hex }]) => `ma ${get_hex(idx, 2)}\nmw ${hex}`)
+                .map(
+                  ([idx, { hex }], cur, arr) =>
+                    `${(cur === 0 || Number.parseInt(arr[cur - 1][0]) !== Number.parseInt(idx) - 1
+                      ? `ma ${get_hex(idx, 2)}\n`
+                      : ''
+                    ).repeat(4)}mw ${hex}`
+                )
                 .join('\n')}
             />
           </div>
