@@ -115,7 +115,7 @@
             <CodeSnippet
               type="multi"
               code={Object.entries(diff)
-                .map(([idx, { hex }]) => `ma ${get_hex(idx, 2)}\nmw ${hex}`)
+                .map(([idx, { hex }]) => `${get_hex(idx, 2)}\nma\nmw ${hex}`)
                 .join('\n')}
             />
           </div>
